@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>ultra blp converter 3000</title>
+    <!--https://raw.githubusercontent.com/Kruithne/node-bufo/master/bufo.js-->
+    <script type="text/javascript" src="bufo.js"></script>
+    <!--https://raw.githubusercontent.com/Kruithne/js-blp/master/js-blp.js-->
+    <script type="text/javascript" src="js-blp.js"></script>
+    <!--https://raw.githubusercontent.com/nodeca/pako/master/dist/pako.min.js-->
+    <script type="text/javascript" src="pako.min.js"></script>
+    <!--https://raw.githubusercontent.com/photopea/UPNG.js/master/UPNG.js-->
+    <script type="text/javascript" src="UPNG.js"></script>
+  </head>
+  <body>
+    <p>All processing is local, your data is not transmitted to any server. Select a BLP file to convert.</p>
+    <footer style="position: fixed; width: 100%; bottom: 0.5em;">
+      This project is licensed under the MIT license. It uses <a href="https://github.com/Kruithne/js-blp">Kruithne/js-blp</a> (with the patches from <a href="https://github.com/Kruithne/js-blp/pull/2">this pull request</a>),
+<a href="https://github.com/Kruithne/node-bufo">Kruithne/node-bufo</a>,
+<a href="https://github.com/nodeca/pako">nodeca/pako</a>, and
+<a href="https://github.com/photopea/UPNG.js">photopea/UPNG.js</a> which are each also licensed under the MIT license. Full details are found in <a href="./LICENSE.md">LICENSE.md</a>.
+    </footer>
+    <script>
+      var openFile = function(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function() {
+          let blp = new BLPFile(reader.result);
+          let data = blp.getPixels(0).readArrayBuffer();
+          let png = new Uint8Array(UPNG.encode([data], blp.width, blp.height, 0, []));
+          let blobUrl = URL.createObjectURL(new Blob([png], { type: 'image/png' }));
+
+          let head = document.createElement("h1");
+          head.innerHTML = input.files[0].name;
+          document.body.appendChild(head);
+
+          var link = document.createElement("a");
+          link.href = blobUrl;
+          link.download = input.files[0].name.replace(new RegExp('blp$'),'png');
+          link.innerHTML = "";
+          let a = document.body.appendChild(link);
+
+          var image = new Image();
+          image.src = blobUrl;
+          a.appendChild(image);
+        };
+        reader.readAsBinaryString(input.files[0]);
+      };
+    </script>
+    <input type='file' onchange='openFile(event)'>
+  </body>
+</html>
