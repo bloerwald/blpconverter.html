@@ -7,7 +7,7 @@ This project uses the following libraries:
 - https://github.com/nodeca/pako
 - https://github.com/photopea/UPNG.js
 
-# bloerwald/bloerwald.github.io/blpconverter
+# bloerwald/blpconverter.html
 MIT License
 
 Copyright (c) 2023 Bernd Lörwald
